@@ -8,31 +8,176 @@
  * Every colour is a DSH design token (`--dsw-alias-*`) with a neutral fallback,
  * so the reading view follows the active skin.
  *
- * ── Two units, and why ────────────────────────────────────────────────────
+ * ── How the width adaptation is written, and why not `em` ─────────────────
  *
- * The root font-size is `13px × --reader-scale`, where the scale follows the
- * pane width (see `scale.ts`). The slide content is therefore expressed in `em`
- * and scales with it; navigation and status chrome — the slide strip, the
- * header strip, the breaker banner, the loading and empty states — stays in
- * `px` and does not. Text reflows instead of being transform-scaled, so glyphs
- * stay crisp.
+ * `--rs` is the width-derived reading scale (see `scale.ts`). Every length in
+ * the SCALED region is `calc(<original>px * var(--rs))`, which has two
+ * properties worth the verbosity:
  *
- * At the base pane width the scale is exactly 1, which makes every `em` below
- * the pixel value it replaced.
+ *   1. At the base pane width `--rs` is exactly 1, so every declaration
+ *      resolves to the pixel value it had before this feature existed. That is
+ *      checkable by reading the file, not by trusting a conversion table.
+ *   2. It does not cascade. `em` would: `margin: 0.46em` on `.pptx-title`
+ *      resolves against the title's own 17px, not the body's 13px, so a margin
+ *      that used to be 6px would silently become 7.8px. Inside `calc` there is
+ *      exactly one font-size the numbers refer to.
+ *
+ * Hairlines (`border`, `border-radius`, `outline`) stay in `px` on purpose: a
+ * 1px rule scaled to 1.15px renders as a heavier, blurrier line. A rule about
+ * typography should not move a device-level hairline.
+ *
+ * The test suite reads this file and enforces both regions — see the
+ * "SCALE: the stylesheet" checks.
  */
 
+/* @scaled — the slide content: everything here is multiplied by --rs */
 .pptx-root {
+  /* The scale itself. Defaulted, so the very first paint (before the observer
+     reports) renders the shipped layout rather than an unset-variable layout. */
+  --rs: var(--reader-scale, 1);
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  font-size: calc(13px * var(--reader-scale, 1));
+  font-size: calc(13px * var(--rs));
   line-height: 1.6;
   color: var(--dsw-alias-label-primary, #e6e6e6);
 }
 
-/* ── Header strip (chrome: fixed size) ───────────────────────────────────── */
+.pptx-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: calc(10px * var(--rs)) calc(14px * var(--rs)) calc(24px * var(--rs));
+}
+
+.pptx-slide__num {
+  margin: 0 0 calc(8px * var(--rs));
+  padding: calc(1px * var(--rs)) calc(6px * var(--rs));
+  border-radius: 4px;
+  display: inline-block;
+  font-size: calc(10px * var(--rs));
+  background: var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.06));
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+.pptx-title {
+  margin: 0 0 calc(8px * var(--rs));
+  font-size: calc(17px * var(--rs));
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.pptx-p {
+  margin: calc(6px * var(--rs)) 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* The bullet marker is drawn here rather than emitted as text, so switching
+   languages cannot invent a second marker next to real document content. */
+.pptx-bullet {
+  margin: calc(3px * var(--rs)) 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pptx-bullet::before {
+  content: '•';
+  margin-right: calc(6px * var(--rs));
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+.pptx-note {
+  margin: calc(10px * var(--rs)) 0 calc(4px * var(--rs));
+  padding: calc(6px * var(--rs)) calc(8px * var(--rs));
+  border-left: 2px solid var(--dsw-alias-border-l3, #444);
+  font-size: calc(11px * var(--rs));
+  color: var(--dsw-alias-label-caption, #888);
+  white-space: pre-wrap;
+}
+
+.pptx-note__label {
+  display: block;
+  margin-bottom: calc(2px * var(--rs));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pptx-table-wrap {
+  margin: calc(10px * var(--rs)) 0;
+  overflow-x: auto;
+}
+
+.pptx-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: calc(12px * var(--rs));
+}
+
+.pptx-table th,
+.pptx-table td {
+  padding: calc(4px * var(--rs)) calc(10px * var(--rs));
+  border: 1px solid var(--dsw-alias-border-l1, #2f2f2f);
+  text-align: left;
+  vertical-align: top;
+  /* 320px scaled, rather than a flat cap: a wide cell is still allowed to be
+     wide, but it narrows with the pane instead of forcing a scrollbar. */
+  max-width: calc(320px * var(--rs));
+  overflow-wrap: anywhere;
+}
+
+.pptx-table th {
+  background: var(--dsw-alias-bg-layer-3, rgba(255, 255, 255, 0.04));
+  font-weight: 600;
+}
+
+.pptx-table__caption {
+  padding: calc(2px * var(--rs)) calc(12px * var(--rs)) 0;
+  font-size: calc(10px * var(--rs));
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+.pptx-image {
+  margin: calc(10px * var(--rs)) 0;
+}
+
+/* A picture keeps the size the shape transform states for it and is only ever
+   capped by the pane: magnifying a bitmap past its natural size to match the
+   text scale would make it softer, not more faithful. */
+.pptx-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--dsw-alias-border-l1, #2a2a2a);
+}
+
+.pptx-image__placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(6px * var(--rs));
+  padding: calc(6px * var(--rs)) calc(10px * var(--rs));
+  border: 1px dashed var(--dsw-alias-border-l2, #3a3a3a);
+  border-radius: 6px;
+  font-size: calc(11px * var(--rs));
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+.pptx-image__meta {
+  margin-top: calc(2px * var(--rs));
+  font-size: calc(10px * var(--rs));
+  color: var(--dsw-alias-label-caption, #777);
+  overflow-wrap: anywhere;
+}
+
+/* @fixed — application chrome: deliberately NOT scaled */
+/*
+ * The slide strip is navigation, and the header strip is status: chrome that
+ * changes size while you drag a divider reads as a glitch, not as
+ * responsiveness. Sizes here are absolute.
+ */
 
 .pptx-head {
   display: flex;
@@ -67,8 +212,6 @@
   border: 1px solid var(--dsw-alias-border-l2, #3a3a3a);
   color: var(--dsw-alias-label-caption, #888);
 }
-
-/* ── Breaker banner (chrome: fixed size) ─────────────────────────────────── */
 
 .pptx-warning {
   margin: 8px 12px 0;
@@ -106,8 +249,6 @@
 .pptx-warning__list li {
   margin: 2px 0;
 }
-
-/* ── Slide strip (chrome: fixed size, it is navigation) ──────────────────── */
 
 .pptx-strip {
   display: flex;
@@ -156,143 +297,6 @@
   font-size: 11px;
   font-family: inherit;
 }
-
-/* ── Slide body (document content: everything below is in `em`) ──────────── */
-
-.pptx-body {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  padding: 0.77em 1.08em 1.85em;
-}
-
-.pptx-slide__num {
-  margin: 0 0 0.62em;
-  padding: 0.08em 0.46em;
-  border-radius: 4px;
-  display: inline-block;
-  font-size: 0.77em;
-  background: var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.06));
-  color: var(--dsw-alias-label-caption, #888);
-}
-
-.pptx-title {
-  margin: 0 0 0.62em;
-  font-size: 1.31em;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.pptx-p {
-  margin: 0.46em 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-/* The bullet marker is drawn here rather than emitted as text, so switching
-   languages cannot invent a second marker next to real document content. */
-.pptx-bullet {
-  margin: 0.23em 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.pptx-bullet::before {
-  content: '•';
-  margin-right: 0.46em;
-  color: var(--dsw-alias-label-caption, #888);
-}
-
-/* ── Speaker notes ───────────────────────────────────────────────────────── */
-
-.pptx-note {
-  margin: 0.77em 0 0.31em;
-  padding: 0.46em 0.62em;
-  border-left: 2px solid var(--dsw-alias-border-l3, #444);
-  font-size: 0.85em;
-  color: var(--dsw-alias-label-caption, #888);
-  white-space: pre-wrap;
-}
-
-.pptx-note__label {
-  display: block;
-  margin-bottom: 0.15em;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* ── Tables ──────────────────────────────────────────────────────────────── */
-
-.pptx-table-wrap {
-  margin: 0.77em 0;
-  overflow-x: auto;
-}
-
-.pptx-table {
-  width: max-content;
-  min-width: 100%;
-  border-collapse: collapse;
-  font-size: 0.92em;
-}
-
-.pptx-table th,
-.pptx-table td {
-  padding: 0.31em 0.77em;
-  border: 1px solid var(--dsw-alias-border-l1, #2f2f2f);
-  text-align: left;
-  vertical-align: top;
-  /* 24.6em rather than a fixed 320px: a cell is still allowed to be wide, but it
-     narrows with the pane instead of forcing a horizontal scrollbar. */
-  max-width: 24.6em;
-  overflow-wrap: anywhere;
-}
-
-.pptx-table th {
-  background: var(--dsw-alias-bg-layer-3, rgba(255, 255, 255, 0.04));
-  font-weight: 600;
-}
-
-.pptx-table__caption {
-  padding: 0.15em 0.92em 0;
-  font-size: 0.77em;
-  color: var(--dsw-alias-label-caption, #888);
-}
-
-/* ── Images ──────────────────────────────────────────────────────────────── */
-
-.pptx-image {
-  margin: 0.77em 0;
-}
-
-/* A picture keeps the size the shape transform states for it and is only ever
-   capped by the pane: magnifying a bitmap past its natural size to match the
-   text scale would make it softer, not more faithful. */
-.pptx-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  border: 1px solid var(--dsw-alias-border-l1, #2a2a2a);
-}
-
-.pptx-image__placeholder {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.46em;
-  padding: 0.46em 0.77em;
-  border: 1px dashed var(--dsw-alias-border-l2, #3a3a3a);
-  border-radius: 6px;
-  font-size: 0.85em;
-  color: var(--dsw-alias-label-caption, #888);
-}
-
-.pptx-image__meta {
-  margin-top: 0.15em;
-  font-size: 0.77em;
-  color: var(--dsw-alias-label-caption, #777);
-  overflow-wrap: anywhere;
-}
-
-/* ── Empty / loading / error (chrome: fixed size) ────────────────────────── */
 
 .pptx-empty,
 .pptx-loading,

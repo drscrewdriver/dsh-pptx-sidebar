@@ -18,7 +18,7 @@
  * Run: `npm test`  (exits non-zero on any failed assertion)
  */
 import { build } from 'esbuild'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -602,6 +602,38 @@ await check('SCALE: the bullet indent stays in proportion with the body text', (
   // when the scale is 1 — the same "nothing moves at the base width" contract.
   const indentPx = scale.INDENT_EM * 13
   assert.ok(Math.abs(indentPx - 14) < 0.2, `indent drifted to ${indentPx}px`)
+})
+
+await check('SCALE: the stylesheet scales slide content and nothing else', () => {
+  // Together with the "factor is exactly 1 at the base width" check above, this
+  // is what makes the claim "at the usual pane width the deck is unchanged"
+  // verifiable rather than hopeful.
+  const css = readFileSync(join(root, 'src', 'client', 'styles.css'), 'utf8')
+  const scaledAt = css.indexOf('@scaled')
+  const fixedAt = css.indexOf('@fixed')
+  assert.ok(scaledAt > -1, 'the stylesheet has no @scaled marker')
+  assert.ok(fixedAt > -1, 'the stylesheet has no @fixed marker')
+  assert.ok(scaledAt < fixedAt, '@scaled must precede @fixed')
+
+  const scaled = css.slice(scaledAt, fixedAt)
+  const fixed = css.slice(fixedAt)
+
+  const offenders = []
+  for (const raw of scaled.split('\n')) {
+    const line = raw.trim()
+    if (line.startsWith('*') || line.startsWith('/*')) continue
+    if (!/\d(?:\.\d+)?px/.test(line)) continue
+    // Hairlines stay absolute on purpose: a 1px rule must not become a 1.15px
+    // blur just because the pane got wider.
+    if (/^(?:border|outline)/.test(line)) continue
+    if (!line.includes('calc(') || !line.includes('var(--rs)')) offenders.push(line)
+  }
+  assert.deepEqual(offenders, [], `unscaled lengths found in the scaled region:\n${offenders.join('\n')}`)
+
+  // The slide strip is navigation, so it must stay out of the scale entirely.
+  assert.ok(!fixed.includes('var(--rs)'), 'application chrome must not be scaled')
+  assert.ok(/\.pptx-strip__tab\s*\{[^}]*font-size: 11px/.test(fixed), 'the slide strip should stay fixed')
+  assert.ok(/font-size: calc\(13px \* var\(--rs\)\)/.test(scaled), 'the root font-size is not scaled')
 })
 
 rmSync(outDir, { recursive: true, force: true })
