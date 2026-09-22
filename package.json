@@ -1,6 +1,6 @@
 {
   "name": "dsh-pptx-sidebar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DSH web plugin (dsh-better-sidebar consumer): render .pptx decks as a readable structured view in the right sidebar — slide list (in deck order, not filename order), text with bullet levels, speaker notes, inline pictures — with a circuit breaker so no deck can freeze the tab. Reading view, not a slide reproduction.",
   "type": "module",
   "main": "lib/index.mjs",

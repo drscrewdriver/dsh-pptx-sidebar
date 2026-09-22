@@ -57,6 +57,37 @@ stated rather than hidden: a slide whose text is entirely inherited renders with
 no text. That is a visible omission, not a corruption — the opposite trade
 (inheriting wrongly) would show text that is not on the slide.
 
+## Width adaptation
+
+The sidebar pane is resizable, so the reading view adapts to it — within bounds,
+because "adaptive" is not a licence to keep growing or shrinking:
+
+| Knob | Value | Why |
+|------|-------|-----|
+| Base width | 360 px | The factor is **exactly 1** here, so the usual pane width renders the layout 0.1.0 shipped |
+| Floor | 0.9× | A narrow pane still gets readable type |
+| Ceiling | 1.15× | A wide pane gets comfortable type, not enormous type |
+| Quantisation | 2 decimals | A drag re-lays-out on 0.01 steps, not on every pixel |
+
+The factor is derived from the pane width and written to the `--reader-scale`
+custom property; the root font-size becomes `13px × scale` and the slide content
+is expressed in `em`, so text **reflows** at the new size instead of being
+transform-scaled (which would blur glyphs).
+
+**Only the document scales.** Titles, bullets, paragraphs, notes, tables and
+image captions follow the factor; the header strip, the slide strip, the breaker
+banner and the loading/empty states keep their fixed size. Chrome that changes
+size while you drag a divider reads as a glitch rather than as responsiveness.
+
+Two related decisions:
+
+- **An unmeasurable width falls back to 1**, not to a bound. Before the first
+  measurement the width is 0, and rendering that as "as narrow as possible" would
+  flash tiny type every time a deck is opened.
+- **Pictures do not scale.** They render at the size the shape transform states
+  and are only capped by the pane; magnifying a bitmap past its natural size to
+  track the text would make it softer, not more faithful.
+
 ## The pipeline
 
 ```

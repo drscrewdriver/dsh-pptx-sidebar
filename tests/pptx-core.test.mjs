@@ -30,7 +30,7 @@ const outDir = mkdtempSync(join(tmpdir(), 'dsh-pptx-test-'))
 
 await build({
   absWorkingDir: root,
-  entryPoints: ['src/client/pptx.ts', 'src/client/locales.ts'],
+  entryPoints: ['src/client/pptx.ts', 'src/client/locales.ts', 'src/client/scale.ts'],
   outdir: outDir,
   outExtension: { '.js': '.mjs' },
   bundle: true,
@@ -42,6 +42,7 @@ await build({
 
 const pptx = await import(pathToFileURL(join(outDir, 'pptx.mjs')).href)
 const { dictionaries, interpolate } = await import(pathToFileURL(join(outDir, 'locales.mjs')).href)
+const scale = await import(pathToFileURL(join(outDir, 'scale.mjs')).href)
 
 // ── a minimal, correct zip writer (fixture only) ─────────────────────────────
 
@@ -555,6 +556,52 @@ await check('every warning renders with no leftover placeholder in zh or en', as
     const seen = result.warnings.map(warning => warning.reason)
     assert.equal(new Set(seen).size, seen.length, `duplicate warning reasons: ${seen.join(', ')}`)
   }
+})
+
+await check('SCALE: the layout at the base width is unchanged', () => {
+  // The property that makes this an adaptation rather than a redesign: at the
+  // base pane width every `em` in the stylesheet resolves to the pixel value it
+  // replaced, so nobody's existing slide width shifts.
+  assert.equal(scale.readerScaleFor(scale.READER_SCALE.base), 1)
+  assert.equal(scale.quantizeScale(1), 1)
+})
+
+await check('SCALE: it shrinks when narrow and grows when wide, within bounds', () => {
+  const { base, min, max } = scale.READER_SCALE
+
+  assert.equal(scale.readerScaleFor(base * 0.5), min, 'a very narrow pane must stop at the floor')
+  assert.equal(scale.readerScaleFor(base * 3), max, 'a very wide pane must stop at the ceiling')
+
+  // Monotonic, so dragging a divider never moves the type the wrong way.
+  let previous = 0
+  for (let width = 100; width <= 900; width += 25) {
+    const value = scale.readerScaleFor(width)
+    assert.ok(value >= previous, `scale went backwards at width ${width}`)
+    previous = value
+  }
+
+  assert.ok(scale.readerScaleFor(base * 1.05) > scale.readerScaleFor(base * 0.95))
+})
+
+await check('SCALE: an unmeasurable pane falls back to the shipped layout', () => {
+  // Not to a bound: before the first observer callback the width can be 0, and
+  // rendering that as "as narrow as possible" would flash tiny type on open.
+  // Infinity is not a width either — it is a broken report, not a wide pane.
+  for (const width of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+    assert.equal(scale.readerScaleFor(width), 1, `width ${width} should fall back`)
+  }
+})
+
+await check('SCALE: values are quantised so a drag does not re-lay-out per pixel', () => {
+  const value = scale.readerScaleCss(scale.READER_SCALE.base * 1.03)
+  assert.ok(/^\d+\.\d{1,2}$/.test(value), `unexpected precision: ${value}`)
+})
+
+await check('SCALE: the bullet indent stays in proportion with the body text', () => {
+  // The indent is in `em` now, so it must come out at the 14px it used to be
+  // when the scale is 1 — the same "nothing moves at the base width" contract.
+  const indentPx = scale.INDENT_EM * 13
+  assert.ok(Math.abs(indentPx - 14) < 0.2, `indent drifted to ${indentPx}px`)
 })
 
 rmSync(outDir, { recursive: true, force: true })

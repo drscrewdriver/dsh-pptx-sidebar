@@ -15,6 +15,8 @@
 import { useEffect, useState } from 'react'
 import { readPptx } from './pptx'
 import { formatBytes } from './circuit-breaker'
+import { INDENT_EM } from './scale'
+import { useReaderScale } from './useReaderScale'
 import { basename } from './utils'
 import type { KeyboardEvent, ReactNode } from 'react'
 import type { T } from './locales'
@@ -42,6 +44,9 @@ export function PptxViewer({ path, title, customData, t }: PptxViewerProps) {
   const [error, setError] = useState<string | null>(null)
   const [current, setCurrent] = useState(0)
   const [urls, setUrls] = useState<Record<string, string>>({})
+  // Drives `--reader-scale` from the pane width; every root below carries it so
+  // the scale survives the loading → ready swap.
+  const rootRef = useReaderScale<HTMLDivElement>()
 
   useEffect(() => {
     if (!isBytes(customData)) return
@@ -81,7 +86,7 @@ export function PptxViewer({ path, title, customData, t }: PptxViewerProps) {
 
   if (!isBytes(customData) || (result === null && error === null)) {
     return (
-      <div className="pptx-root">
+      <div className="pptx-root" ref={rootRef}>
         <div className="pptx-loading">
           <div className="pptx-spinner" />
           <div>{t('state.loading')}</div>
@@ -92,7 +97,7 @@ export function PptxViewer({ path, title, customData, t }: PptxViewerProps) {
 
   if (error !== null) {
     return (
-      <div className="pptx-root">
+      <div className="pptx-root" ref={rootRef}>
         <div className="pptx-error">
           <div className="pptx-error__title">❌ {t('state.error')}</div>
           <div className="pptx-error__hint">{error}</div>
@@ -119,7 +124,7 @@ export function PptxViewer({ path, title, customData, t }: PptxViewerProps) {
   }
 
   return (
-    <div className="pptx-root" tabIndex={0} onKeyDown={onKeyDown}>
+    <div className="pptx-root" tabIndex={0} onKeyDown={onKeyDown} ref={rootRef}>
       <div className="pptx-head">
         <span className="pptx-head__name" title={meta.fileName}>
           📽 {meta.fileName}
@@ -245,7 +250,7 @@ function Block({ block, urls, t }: { block: SlideBlock; urls: Record<string, str
       return <div className="pptx-title">{runs(block.runs ?? [{ text: block.text }])}</div>
     case 'bullet':
       return (
-        <div className="pptx-bullet" style={{ marginLeft: `${((block.level ?? 1) - 1) * 14}px` }}>
+        <div className="pptx-bullet" style={{ marginLeft: `${((block.level ?? 1) - 1) * INDENT_EM}em` }}>
           {runs(block.runs ?? [{ text: block.text }])}
         </div>
       )
