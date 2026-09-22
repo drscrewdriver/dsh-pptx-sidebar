@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/index.ts"],
+  "sourcesContent": ["/**\n * Node half of `dsh-pptx-sidebar`.\n *\n * The Cordis loader needs one entry point per profile row. This plugin's\n * behaviour lives entirely in the browser half: the viewer is registered\n * through dsh-better-sidebar's client service and reads the archive's bytes off\n * that plugin's own `/sidebar/file` route (which owns the workspace path\n * fence). So this half installs nothing \u2014 no route, no tool, no state.\n */\n\n/** Profile row identity; must match `cordis.patch.yml` and `package.json#name`. */\nexport const name = 'dsh-pptx-sidebar'\n\n/** Host-side apply. Intentionally empty \u2014 see the module docblock. */\nexport function apply(): void {}\n"],
+  "mappings": ";AAWO,IAAM,OAAO;AAGb,SAAS,QAAc;AAAC;",
+  "names": []
+}

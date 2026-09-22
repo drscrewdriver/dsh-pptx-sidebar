@@ -1,0 +1,21 @@
+{
+  "id": "dsh-external/dsh-pptx-sidebar",
+  "name": "dsh-pptx-sidebar",
+  "version": "0.1.0",
+  "description": {
+    "en": "Read .pptx decks in the right sidebar (dsh-better-sidebar consumer): a slide list in deck order, text with bullet levels, speaker notes and inline pictures, guarded by a circuit breaker. Reading view, not a slide reproduction.",
+    "zh": "在右侧栏阅读 .pptx 演示文稿（dsh-better-sidebar 消费者）：按放映顺序的幻灯片清单、带层级的项目符号文本、演讲备注与内联图片，带熔断保护。是阅读视图，不是版式还原。"
+  },
+  "license": "MIT",
+  "engines": {
+    "dsh": ">=0.1.5-rc.1 <0.2.0-0"
+  },
+  "contributes": {
+    "tools": [],
+    "skills": []
+  },
+  "main": "./lib/index.mjs",
+  "client": {
+    "main": "./lib/client.js"
+  }
+}

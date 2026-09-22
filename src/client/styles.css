@@ -1,0 +1,326 @@
+/*
+ * dsh-pptx-sidebar — stylesheet.
+ *
+ * Injected at runtime: a DSH plugin has no CSS entry point, so the build inlines
+ * this file as a string and `apply` appends one <style> tag inside a
+ * `ctx.effect`, whose disposer removes it on unload.
+ *
+ * Every colour is a DSH design token (`--dsw-alias-*`) with a neutral fallback,
+ * so the reading view follows the active skin.
+ */
+
+.pptx-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dsw-alias-label-primary, #e6e6e6);
+}
+
+/* ── Header strip ────────────────────────────────────────────────────────── */
+
+.pptx-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1, #2a2a2a);
+  font-size: 11px;
+  color: var(--dsw-alias-label-secondary, #aaa);
+}
+
+.pptx-head__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+  color: var(--dsw-alias-label-primary, #e6e6e6);
+}
+
+.pptx-head__tag {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  background: var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.06));
+}
+
+/* The one thing a reader must not have to guess. */
+.pptx-head__badge {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  border: 1px solid var(--dsw-alias-border-l2, #3a3a3a);
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+/* ── Breaker banner ──────────────────────────────────────────────────────── */
+
+.pptx-warning {
+  margin: 8px 12px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--dsw-alias-state-warn-primary, #fbbf24);
+  background: var(--dsw-alias-state-warn-tertiary, rgba(251, 191, 36, 0.1));
+  font-size: 12px;
+}
+
+.pptx-warning--blocked {
+  border-color: var(--dsw-alias-state-error-primary, #ef4444);
+}
+
+.pptx-warning__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--dsw-alias-state-warn-label, #fbbf24);
+}
+
+.pptx-warning--blocked .pptx-warning__head {
+  color: var(--dsw-alias-state-error-primary, #ef4444);
+}
+
+.pptx-warning__list {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11px;
+  color: var(--dsw-alias-label-secondary, #aaa);
+}
+
+.pptx-warning__list li {
+  margin: 2px 0;
+}
+
+/* ── Slide strip: the deck's spine ───────────────────────────────────────── */
+
+.pptx-strip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1, #2a2a2a);
+  scrollbar-width: thin;
+}
+
+.pptx-strip__tab {
+  flex: 0 0 auto;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--dsw-alias-border-l1, #2a2a2a);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary, #aaa);
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pptx-strip__tab:hover {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.06));
+}
+
+/* `--current` is the selected slide; `--alone` marks it in the > 60 fallback too. */
+.pptx-strip__tab--current {
+  border-color: var(--dsw-alias-brand-primary, #60a5fa);
+  color: var(--dsw-alias-label-primary, #e6e6e6);
+  background: var(--dsw-alias-interactive-bg-hover, rgba(96, 165, 250, 0.12));
+}
+
+/* Past the tab budget the strip would push nesting tabs forever, so it folds. */
+.pptx-strip__select {
+  flex: 0 0 auto;
+  max-width: 180px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--dsw-alias-border-l2, #3a3a3a);
+  background: var(--dsw-alias-bg-layer-3, transparent);
+  color: var(--dsw-alias-label-primary, #e6e6e6);
+  font-size: 11px;
+  font-family: inherit;
+}
+
+/* ── Slide body ──────────────────────────────────────────────────────────── */
+
+.pptx-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 14px 24px;
+}
+
+.pptx-slide__num {
+  margin: 0 0 8px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 10px;
+  background: var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.06));
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+.pptx-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.pptx-p {
+  margin: 6px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* The bullet marker is drawn here rather than emitted as text, so switching
+   languages cannot invent a second marker next to real document content. */
+.pptx-bullet {
+  margin: 3px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pptx-bullet::before {
+  content: '•';
+  margin-right: 6px;
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+/* ── Speaker notes ───────────────────────────────────────────────────────── */
+
+.pptx-note {
+  margin: 10px 0 4px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--dsw-alias-border-l3, #444);
+  font-size: 11px;
+  color: var(--dsw-alias-label-caption, #888);
+  white-space: pre-wrap;
+}
+
+.pptx-note__label {
+  display: block;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+
+.pptx-table-wrap {
+  margin: 10px 0;
+  overflow-x: auto;
+}
+
+.pptx-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.pptx-table th,
+.pptx-table td {
+  padding: 4px 10px;
+  border: 1px solid var(--dsw-alias-border-l1, #2f2f2f);
+  text-align: left;
+  vertical-align: top;
+  max-width: 320px;
+  overflow-wrap: anywhere;
+}
+
+.pptx-table th {
+  background: var(--dsw-alias-bg-layer-3, rgba(255, 255, 255, 0.04));
+  font-weight: 600;
+}
+
+.pptx-table__caption {
+  padding: 2px 12px 0;
+  font-size: 10px;
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+/* ── Images ──────────────────────────────────────────────────────────────── */
+
+.pptx-image {
+  margin: 10px 0;
+}
+
+.pptx-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--dsw-alias-border-l1, #2a2a2a);
+}
+
+.pptx-image__placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px dashed var(--dsw-alias-border-l2, #3a3a3a);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--dsw-alias-label-caption, #888);
+}
+
+.pptx-image__meta {
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--dsw-alias-label-caption, #777);
+  overflow-wrap: anywhere;
+}
+
+/* ── Empty / loading / error ─────────────────────────────────────────────── */
+
+.pptx-empty,
+.pptx-loading,
+.pptx-error {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--dsw-alias-label-tertiary, #888);
+}
+
+.pptx-empty__title,
+.pptx-error__title {
+  font-size: 13px;
+  color: var(--dsw-alias-label-secondary, #aaa);
+}
+
+.pptx-empty__hint,
+.pptx-error__hint {
+  font-size: 11px;
+  color: var(--dsw-alias-label-caption, #777);
+  max-width: 260px;
+}
+
+.pptx-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--dsw-alias-border-l2, #3a3a3a);
+  border-top-color: var(--dsw-alias-brand-primary, #60a5fa);
+  border-radius: 50%;
+  animation: pptx-spin 0.8s linear infinite;
+}
+
+@keyframes pptx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pptx-spinner {
+    animation-duration: 2s;
+  }
+}
