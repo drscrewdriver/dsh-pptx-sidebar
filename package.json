@@ -50,6 +50,10 @@
     "circuit-breaker"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drscrewdriver/dsh-pptx-sidebar.git"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
