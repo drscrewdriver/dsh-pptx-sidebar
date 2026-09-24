@@ -42,6 +42,13 @@ Width adaptation: the reading view scales with the sidebar pane, within bounds.
   width, both bounds, monotonicity, the unmeasurable-width fallback, two-decimal
   quantisation, and the indent matching 14 px at scale 1.
 
+### Packaging
+
+- **First npm release**: `dsh-pptx-sidebar@0.2.0`, dist-tags `latest` + `dsh-0.1.5`; 39 files / 83.1 kB, tarball shasum `e6faf24a4e1c8e32a561ecb8693c828759626e96`.
+- The published package declares **`repository`**, pointing back at
+  `drscrewdriver/dsh-pptx-sidebar`. The awesome list links an npm package to a
+  repository only when the published package points back at it.
+
 ## [0.1.0] — 2026-09-22
 
 First release. Reads `.pptx` / `.pptm` as a structured reading view in the DSH
