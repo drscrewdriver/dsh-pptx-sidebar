@@ -8,14 +8,23 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- **Host line retargeted to DSH 0.2.0** (`compat/0.2.0` branch): `engines.dsh` and the
+- **Host line retargeted to DSH 0.2.0** (`main`, promoted from `compat/0.2.0`): `engines.dsh` and the
   `@deepseek-ai/dsh-client-locale` peer move from `>=0.1.5-rc.1 <0.2.0-0` to
   `>=0.2.0-rc.1 <0.2.1-0` (rc-window pinning; 0.2.1+ needs re-evaluation). Metadata-only
   adaptation — the plugin's consumption surface is pure `ctx.get(...)` calls with local
   interface definitions, and 0.2.0-rc.1 keeps the 0.1.7 plugin API intact, so zero code
-  changes. The 0.1.5 line remains served by `main` (≤0.2.0).
+  changes. The 0.1.x lines (0.1.5 / 0.1.7) remain served by the frozen branches
+  `compat/0.1.7` / `compat/0.1.5` (≤0.2.0).
 - Dependency tree refreshed on the new line; lockfile regenerated. `dsh.plugin.json`
   version/engines synced with `package.json`.
+
+### Documentation (2026-09-29 — no republish)
+
+- Branch restructure: `main` is now the 0.2.0 line (promoted from `compat/0.2.0`); the
+  0.1.x host lines are served by the frozen branches `compat/0.1.7` / `compat/0.1.5`.
+  npm mapping unchanged: `dsh-0.2.0` → this line, `dsh-0.1.7` / `dsh-0.1.5` → the 0.1.x line.
+- Install (this line): `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`.
+- README gained a five-language quick reference (Deutsch / Français / Русский / Español / Italiano).
 
 ## [0.2.0] — 2026-09-23
 
