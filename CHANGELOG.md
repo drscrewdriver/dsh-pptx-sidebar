@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-09-29
+
+### Changed
+
+- **Host line retargeted to DSH 0.2.0** (`compat/0.2.0` branch): `engines.dsh` and the
+  `@deepseek-ai/dsh-client-locale` peer move from `>=0.1.5-rc.1 <0.2.0-0` to
+  `>=0.2.0-rc.1 <0.2.1-0` (rc-window pinning; 0.2.1+ needs re-evaluation). Metadata-only
+  adaptation — the plugin's consumption surface is pure `ctx.get(...)` calls with local
+  interface definitions, and 0.2.0-rc.1 keeps the 0.1.7 plugin API intact, so zero code
+  changes. The 0.1.5 line remains served by `main` (≤0.2.0).
+- Dependency tree refreshed on the new line; lockfile regenerated. `dsh.plugin.json`
+  version/engines synced with `package.json`.
+
 ## [0.2.0] — 2026-09-23
 
 Width adaptation: the reading view scales with the sidebar pane, within bounds.

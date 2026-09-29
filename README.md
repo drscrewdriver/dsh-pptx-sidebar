@@ -18,7 +18,7 @@ preview area. Without that plugin it loads, warns once, and does nothing.
 
 ```bash
 dsh plugin --profile <profile> add github:drscrewdriver/dsh-pptx-sidebar#<sha>
-dsh plugin --profile <profile> add dsh-pptx-sidebar@0.1.0     # once published
+dsh plugin --profile <profile> add dsh-pptx-sidebar@0.3.0     # the 0.2.0 host line
 ```
 
 Then **restart the DSH host** — a browser refresh is not enough for a new loader
@@ -160,6 +160,16 @@ tiny PNG. It is hostile where the format is:
 The zip and XML code is **copied** from the sibling document plugin rather than
 shared. Two users of this code is not yet the threshold for extracting a package
 — that would add a third thing to publish and version-lock.
+
+## Compatibility
+
+| Plugin version | DSH host range | Notes |
+|----------------|----------------|-------|
+| 0.3.0 | `>=0.2.0-rc.1 <0.2.1-0` | The 0.2.0 line (`compat/0.2.0` branch). Metadata-only adaptation: the consumption surface is pure `ctx.get(...)` calls, 0.2.0-rc.1 keeps the 0.1.7 plugin API intact |
+| 0.2.0 | `>=0.1.5-rc.1 <0.2.0-0` | Served by `main` |
+
+`engines.dsh`, the `@deepseek-ai/dsh-client-locale` peer in `package.json`, and
+`dsh.plugin.json`'s `engines.dsh` all carry the same range (kept in lockstep).
 
 ## License
 
