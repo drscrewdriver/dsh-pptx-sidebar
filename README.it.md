@@ -180,6 +180,26 @@ condiviso. Due utenti di questo codice non sono ancora la soglia per estrarre
 un pacchetto — aggiungerebbero una terza cosa da pubblicare e da bloccare per
 versione.
 
+## Compatibilità
+
+| Versione plugin | Intervallo host DSH | Note |
+|-----------------|---------------------|------|
+| 0.3.0 | `>=0.2.0-rc.1 <0.2.1-0` | La linea 0.2.0 (`main`, promossa da `compat/0.2.0`). Adattamento solo di metadati: la superficie di consumo è composta da pure chiamate `ctx.get(...)`, e 0.2.0-rc.1 mantiene intatta l'API plugin di 0.1.7 |
+| 0.2.0 | `>=0.1.5-rc.1 <0.2.0-0` | Servita dai rami congelati `compat/0.1.7` / `compat/0.1.5` |
+
+`engines.dsh`, la peer dependency `@deepseek-ai/dsh-client-locale` in `package.json` e
+`engines.dsh` in `dsh.plugin.json` riportano lo stesso intervallo (mantenuto allineato).
+
+## Languages / Sprachen / Langues / Языки / Idiomas / Lingue
+
+Questa README è scritta in italiano. Riferimento rapido di compatibilità e installazione (questa linea richiede DSH 0.2.0: `>=0.2.0-rc.1 <0.2.1-0`; installazione: `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`):
+
+- **Deutsch** — benötigt DSH 0.2.0 (`>=0.2.0-rc.1 <0.2.1-0`). Installation: `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`. Die 0.1.x-Wirtslinie wird von den eingefrorenen Zweigen `compat/0.1.7` / `compat/0.1.5` (npm-Tags `dsh-0.1.7` / `dsh-0.1.5`) versorgt.
+- **Français** — nécessite DSH 0.2.0 (`>=0.2.0-rc.1 <0.2.1-0`). Installation : `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`. La lignée d'hôtes 0.1.x est assurée par les branches figées `compat/0.1.7` / `compat/0.1.5` (tags npm `dsh-0.1.7` / `dsh-0.1.5`).
+- **Русский** — требуется DSH 0.2.0 (`>=0.2.0-rc.1 <0.2.1-0`). Установка: `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`. Линия хостов 0.1.x обслуживается замороженными ветками `compat/0.1.7` / `compat/0.1.5` (npm-теги `dsh-0.1.7` / `dsh-0.1.5`).
+- **Español** — requiere DSH 0.2.0 (`>=0.2.0-rc.1 <0.2.1-0`). Instalación: `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`. La línea de anfitriones 0.1.x la atienden las ramas congeladas `compat/0.1.7` / `compat/0.1.5` (etiquetas npm `dsh-0.1.7` / `dsh-0.1.5`).
+- **Italiano** — richiede DSH 0.2.0 (`>=0.2.0-rc.1 <0.2.1-0`). Installazione: `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`. La linea di host 0.1.x è servita dai rami congelati `compat/0.1.7` / `compat/0.1.5` (tag npm `dsh-0.1.7` / `dsh-0.1.5`).
+
 ## Licenza
 
 MIT

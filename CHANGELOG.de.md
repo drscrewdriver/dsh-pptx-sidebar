@@ -5,6 +5,28 @@ Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 und dieses Projekt hält sich an die
 [Semantische Versionierung](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-09-29
+
+### Geändert
+
+- **Host-Linie auf DSH 0.2.0 umgestellt** (`main`, befördert aus `compat/0.2.0`): `engines.dsh` und der
+  `@deepseek-ai/dsh-client-locale`-Peer wechseln von `>=0.1.5-rc.1 <0.2.0-0` zu
+  `>=0.2.0-rc.1 <0.2.1-0` (rc-Fenster-Pinning; 0.2.1+ muss neu bewertet werden). Reine
+  Metadaten-Anpassung — die Konsumfläche des Plugins besteht aus reinen `ctx.get(...)`-Aufrufen mit lokalen
+  Schnittstellendefinitionen, und 0.2.0-rc.1 hält die Plugin-API von 0.1.7 intakt, daher null Codeänderungen.
+  Die 0.1.x-Linien (0.1.5 / 0.1.7) werden weiter von den eingefrorenen Zweigen
+  `compat/0.1.7` / `compat/0.1.5` (≤0.2.0) versorgt.
+- Abhängigkeitsbaum auf die neue Linie aktualisiert; Lockfile neu generiert. `dsh.plugin.json`
+  version/engines mit `package.json` synchronisiert.
+
+### Dokumentation (2026-09-29 — keine Neuveröffentlichung)
+
+- Branch-Restrukturierung: `main` ist jetzt die 0.2.0-Linie (befördert aus `compat/0.2.0`); die
+  0.1.x-Host-Linien werden von den eingefrorenen Zweigen `compat/0.1.7` / `compat/0.1.5` versorgt.
+  npm-Zuordnung unverändert: `dsh-0.2.0` → diese Linie, `dsh-0.1.7` / `dsh-0.1.5` → die 0.1.x-Linie.
+- Installation (diese Linie): `dsh plugin --profile <profile> add dsh-pptx-sidebar@dsh-0.2.0`.
+- Die README erhielt eine Schnellreferenz in fünf Sprachen (Deutsch / Français / Русский / Español / Italiano).
+
 ## [0.2.0] — 2026-09-23
 
 Breitenanpassung: Die Leseansicht skaliert mit dem Sidebar-Bereich, innerhalb
