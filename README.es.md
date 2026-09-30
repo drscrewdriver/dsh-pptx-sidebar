@@ -2,6 +2,8 @@
 
 [简体中文](README.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Italiano](README.it.md) | [Русский](README.ru.md) | [Español](README.es.md)
 
+> ⛔ **Este proyecto ya no se mantiene (2026-10-01).** Las versiones recientes del host DSH incluyen vista previa integrada en el panel lateral para presentaciones office, así que el plugin deja de mantenerse — no habrá más publicaciones ni adaptación a futuras líneas del host. Las versiones publicadas siguen instalables; para hosts 0.1.x usa las builds de las ramas congeladas `compat/0.1.7` / `compat/0.1.5`.
+
 Lee presentaciones `.pptx` / `.pptm` en la barra lateral de DSH — las
 diapositivas **en orden de presentación**, con su texto, sus niveles de
 viñetas, las notas del orador y las imágenes incrustadas.

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pptx Sidebar",
+    "description": "Read .pptx decks in the right sidebar (dsh-better-sidebar consumer): a slide list in deck order, text with bullet levels, speaker notes and inline pictures, guarded by a circuit breaker. Reading view, not a slide reproduction."
+  }
+}

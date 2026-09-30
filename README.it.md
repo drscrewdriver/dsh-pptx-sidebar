@@ -2,6 +2,8 @@
 
 [简体中文](README.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Italiano](README.it.md) | [Русский](README.ru.md) | [Español](README.es.md)
 
+> ⛔ **Questo progetto non è più mantenuto (2026-10-01).** Le versioni recenti dell’host DSH includono un’anteprima integrata nel pannello laterale per le presentazioni office; il plugin cessa di essere mantenuto — nessuna pubblicazione futura, nessun adattamento alle future linee dell’host. Le versioni pubblicate restano installabili; per gli host 0.1.x usate le build dai rami congelati `compat/0.1.7` / `compat/0.1.5`.
+
 Leggi i deck `.pptx` / `.pptm` nella barra laterale di DSH — le slide
 **nell'ordine di presentazione**, con il loro testo, i livelli di elenco, le
 note del relatore e le immagini incorporate.

@@ -2,6 +2,8 @@
 
 [简体中文](README.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Italiano](README.it.md) | [Русский](README.ru.md) | [Español](README.es.md)
 
+> ⛔ **本项目已停止维护（2026-10-01）。** DSH 宿主较新版本已内置 office 演示文稿的侧栏预览，本插件不再单独维护、不再发版，也不参与后续宿主版本线适配。已发布版本仍可安装使用；0.1.x 宿主请使用冻结分支 `compat/0.1.7` / `compat/0.1.5` 的对应版本。
+
 Read `.pptx` / `.pptm` decks in the DSH sidebar — the slides **in presentation
 order**, with their text, bullet levels, speaker notes and inline pictures.
 

@@ -2,6 +2,8 @@
 
 [简体中文](README.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Italiano](README.it.md) | [Русский](README.ru.md) | [Español](README.es.md)
 
+> ⛔ **Ce projet n’est plus maintenu (2026-10-01).** Les versions récentes de l’hôte DSH intègrent un aperçu latéral des présentations office ; ce plugin cesse d’être maintenu — aucune publication ultérieure, aucune adaptation aux futures lignes de l’hôte. Les versions publiées restent installables ; pour les hôtes 0.1.x, utilisez les versions des branches figées `compat/0.1.7` / `compat/0.1.5`.
+
 Lisez des présentations `.pptx` / `.pptm` dans la barre latérale de DSH — les
 diapositives **dans l'ordre de présentation**, avec leur texte, leurs niveaux
 de puces, les notes du présentateur et les images intégrées.

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pptx – Pannello laterale",
+    "description": "Leggi presentazioni .pptx nel pannello laterale destro (consumatore di dsh-better-sidebar): elenco diapositive in ordine di proiezione, testo con elenchi puntati gerarchici, note del relatore e immagini in linea, con circuit breaker. Vista di lettura, non una riproduzione di diapositive."
+  }
+}

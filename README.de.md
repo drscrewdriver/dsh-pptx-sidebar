@@ -2,6 +2,8 @@
 
 [简体中文](README.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Italiano](README.it.md) | [Русский](README.ru.md) | [Español](README.es.md)
 
+> ⛔ **Dieses Projekt wird nicht mehr gepflegt (2026-10-01).** Neuere DSH-Hosts bringen eine eingebaute Seitenleisten-Vorschau für Office-Präsentationen mit; dieses Plugin wird nicht weiter gepflegt — keine weiteren Veröffentlichungen, keine Anpassung an künftige Host-Versionen. Veröffentlichte Versionen bleiben installierbar; für 0.1.x-Hosts die Builds aus den eingefrorenen Zweigen `compat/0.1.7` / `compat/0.1.5` verwenden.
+
 `.pptx` / `.pptm`-Präsentationen in der DSH-Sidebar lesen — die Folien **in
 Präsentationsreihenfolge**, mit ihrem Text, den Aufzählungsebenen, den
 Sprechernotizen und den eingebetteten Bildern.
