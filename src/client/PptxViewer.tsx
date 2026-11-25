@@ -17,6 +17,7 @@ import { readPptx } from './pptx'
 import { formatBytes } from './circuit-breaker'
 import { INDENT_EM } from './scale'
 import { useReaderScale } from './useReaderScale'
+import { mountStarRow } from './star-row-copy'
 import { basename } from './utils'
 import type { KeyboardEvent, ReactNode } from 'react'
 import type { T } from './locales'
@@ -163,6 +164,8 @@ export function PptxViewer({ path, title, customData, t }: PptxViewerProps) {
           </div>
         </>
       )}
+      {/* star 快车道行（单源 _tools/star-row，改副本无效）：纯 DOM 挂载，整行即链接 */}
+      <span ref={(n: HTMLElement | null) => { if (n && !n.firstChild) n.appendChild(mountStarRow()) }} />
     </div>
   )
 }
